@@ -1,4 +1,4 @@
-<div class="mainPage">
+<!-- <div class="mainPage">
   <div class="userInput">
     <div class="quants">
       <h1>Quants</h1>
@@ -21,7 +21,7 @@
     <button (click)="onSubmit()">Submit</button>
   </div>
   <h1>Total Score</h1>
-  <!-- <div class="totalBar">
+  <div class="totalBar">
     <div [ngStyle]="totalCurrentWidth"></div>
     <div [ngStyle]="totalTargetWidth">{{(totalTargetScore - totalCurrentScore)}}</div>
   </div>
@@ -34,39 +34,125 @@
     <h3>VerbalScore</h3>
     <div [ngStyle]="curremtVerbal"></div>
     <div [ngStyle]="targetVerbal"></div>
-  </div> -->
-</div>
+  </div> 
+</div>-->
 
-<div>
-  <div *ngIf="totalCurrentScore < totalTargetScore || totalCurrentScore > totalTargetScore">
+<div class="inputContainer">
+  <div style="width: 50%; margin: 5%">
+    <span style="font-size: 25px">Quants</span>
+    <form [formGroup]="quantsForm" class="inputForm">
+      <label>Current:</label>
+      <input type="text" formControlName="currentScore" class="inputControls">
+      <label>Target</label>
+      <input type="text" formControlName="targetScore" class="inputControls">
+    </form>
+  </div>
+  <div style="width: 50%; margin: 5%">
+    <span style="font-size: 25px">Verbal</span>
+    <form [formGroup]="verbalForm" class="inputForm">
+      <span>Current:</span>
+      <input type="text" formControlName="currentScore" class="inputControls">
+      <span>Target</span>
+      <input type="text" formControlName="targetScore" class="inputControls">
+    </form>
+  </div>
+</div>
+<button type="submit" (click)="onSubmit()" class="submitBtn">Submit and Refresh</button>
+
+<div style="background-color: #fbfbfb; margin: 5%; padding:50px">
+  <span style="font-size: 25px">Total Score</span>
+  <div>
+    <div style="width: 100%; display: flex; margin-left: 5px; margin-bottom: 5px">
+      <div [ngStyle]="currentScoreArrowPlacement" *ngIf="currentScoreArrowPlacement">
+        <div class="scoreText">{{totalCurrentScore}}</div>
+      </div>
+      <div [ngStyle]="targetScoreArrowPlacement"
+        *ngIf="(targetScoreArrowPlacement && !(totalCurrentScore === totalTargetScore)) && scoreDiff > 30">
+        <div class="scoreText">{{totalTargetScore}}</div>
+      </div>
+    </div>
     <div style="width: 100%; display: flex">
       <div [ngStyle]="currentScoreArrowPlacement" *ngIf="currentScoreArrowPlacement">
-        <div class="arrow-down"></div>
+        <div [ngClass]="arrowClassCurrent"></div>
       </div>
-      <div [ngStyle]="targetScoreArrowPlacement" *ngIf="targetScoreArrowPlacement">
-        <div class="arrow-down"></div>
+      <div [ngStyle]="targetScoreArrowPlacement"
+        *ngIf="(targetScoreArrowPlacement && !(totalCurrentScore === totalTargetScore)) && scoreDiff > 30">
+        <div [ngClass]="arrowClassTarget"></div>
       </div>
     </div>
     <div style="width: 100%; background-color: #f5f5f5; height: 15px; display: flex">
       <div [ngStyle]="totalCurrentWidth"></div>
       <div [ngStyle]="totalTargetWidth">
-        <div style="text-align: center" *ngIf="scoreDiff">+ {{scoreDiff}}</div>
+        <div style="text-align: center" *ngIf="scoreDiff > 30">+ {{scoreDiff}}</div>
       </div>
+      <div *ngIf="scoreDiff > 0 && scoreDiff < 30">+ {{scoreDiff}}</div>
+    </div>
+    <div [ngStyle]="targetScoreArrowPlacement" *ngIf="(totalCurrentScore === totalTargetScore) || (scoreDiff < 30)">
+      <div class="arrow-up"></div>
+    </div>
+    <div [ngStyle]="targetScoreArrowPlacement" *ngIf="scoreDiff > 0 && scoreDiff < 30">
+      <div class="scoreText">{{totalTargetScore}}</div>
     </div>
   </div>
+</div>
 
 
-  <div *ngIf="(totalCurrentScore && totalTargetScore) && (totalCurrentScore === totalTargetScore)">
-    <div style="width: 100%; display: flex; margin-top: 5%">
-      <div [ngStyle]="currentScoreArrowPlacement">
-        <div class="arrow-down"></div>
+<div style="background-color: #fbfbfb; margin: 5%; padding:50px; display: flex">
+  <div style="width: 50%; margin: 10px; padding: 10px">
+    <span style="margin: 10px">Quants</span><br>
+    <span style="margin: 30px 0 0 20px">Q30</span>
+
+    <div style="width: 100%; height: 15px; display: flex; margin: 10px 10px 10px 5px;">
+      <div style="height: 15px; width: 35%;">
+        <div class="scoreText"> 30</div>
+      </div>
+      <div style="width: 15%">
+        <div class="scoreText">15</div>
       </div>
     </div>
-    <div style="width: 100%; background-color: #f5f5f5; height: 15px; display: flex">
-      <div [ngStyle]="totalCurrentWidth"></div>
+    <div style="width: 100%; height: 15px; display: flex">
+      <div style="height: 15px; width: calc(35% + 5px)">
+        <div class="arrow-down"></div>
+      </div>
+      <div style="height: 15px; width: 15%">
+        <div class="targetArrow"></div>
+      </div>
     </div>
-    <div [ngStyle]="currentScoreArrowPlacement">
+    <div style="width: 100%; height: 15px; background-color: #f5f5f5; display: flex">
+      <div style="background-color: #0fa2eb; height: 15px; width: 35%"></div>
+      <div style="background-color: #ffe28a; height: 15px; width: 15%"></div>
+    </div>
+    <div style="height: 15px; width: calc(0% + 5px)">
       <div class="arrow-up"></div>
     </div>
   </div>
+  <div style="width: 50%; margin: 10px; padding: 10px">
+    <span style="margin: 10px">Verbal</span><br>
+    <span style="margin: 30px 0 0 20px">Q30</span>
+
+    <div style="width: 100%; height: 15px; display: flex; margin: 10px 10px 10px 5px;">
+      <div style="height: 15px; width: 35%;">
+        <div class="scoreText"> 30</div>
+      </div>
+      <div style="width: 15%">
+        <div class="scoreText">15</div>
+      </div>
+    </div>
+    <div style="width: 100%; height: 15px; display: flex">
+      <div style="height: 15px; width: calc(35% + 5px)">
+        <div class="arrow-down"></div>
+      </div>
+      <div style="height: 15px; width: 15%">
+        <div class="targetArrow"></div>
+      </div>
+    </div>
+    <div style="width: 100%; height: 15px; background-color: #f5f5f5; display: flex">
+      <div style="background-color: #0fa2eb; height: 15px; width: 35%"></div>
+      <div style="background-color: #ffe28a; height: 15px; width: 15%"></div>
+    </div>
+    <div style="height: 15px; width: calc(0% + 5px)">
+      <div class="arrow-up"></div>
+    </div>
+  </div>
+
 </div>

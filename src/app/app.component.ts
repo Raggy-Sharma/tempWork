@@ -25,8 +25,13 @@ export class AppComponent {
   public currentScoreArrowPlacement: any
   public targetScoreArrowPlacement: any;
   public scoreDiff;
+  public submitClicked: boolean = false;
+  public arrowClassCurrent;
+  public arrowClassTarget;
 
   ngOnInit() {
+    this.arrowClassCurrent = 'arrow-down currentArrow';
+    this.arrowClassTarget = 'targetArrow'
     this.quantsForm = this.formBuilder.group({
       currentScore: '',
       targetScore: ''
@@ -58,11 +63,11 @@ export class AppComponent {
     this.currentVerbalScore = this.verbalForm.controls.currentScore.value;
     this.targetQuantsScore = this.quantsForm.controls.targetScore.value;
     this.targetVerbalScore = this.verbalForm.controls.targetScore.value;
+    (this.totalCurrentScore && this.totalTargetScore) ? this.submitClicked = true : this.submitClicked = false;
+
 
     this.totalCurrentScore = (200 + (Number(this.currentQuantsScore) + Number(this.currentVerbalScore)) * 5);
     this.totalTargetScore = (200 + (Number(this.targetQuantsScore) + Number(this.targetVerbalScore)) * 5);
-    console.log('this.totalCurrentScore', this.totalCurrentScore, 'this.totalTargetScore', this.totalTargetScore)
-
     if (this.totalCurrentScore < this.totalTargetScore) {
       this.scoreDiff = this.totalTargetScore - this.totalCurrentScore;
       var width;
@@ -70,19 +75,18 @@ export class AppComponent {
       var targetWidth;
       targetWidth = this.totalTargetScore / 800 * 100;
       this.currentScoreArrowPlacement = {
-        'transition': '2s',
+        'transition': '1.5s',
         'width': 'calc(' + [width] + '%  + 5px)',
         'height': '15px',
-        'background-color': '*0fa2eb'
       }
+      var setWidth = this.scoreDiff > 30 ? targetWidth - width + '%' : 'calc(' + [targetWidth] + '%  + 5px)'
       this.targetScoreArrowPlacement = {
-        'transition': '2s',
-        'width': [targetWidth - width] + '%',
+        'transition': '1.5s',
+        'width': setWidth,
         'height': '15px',
-        'background-color': '*ffe28a'
       }
       this.totalCurrentWidth = {
-        'transition': '2s',
+        'transition': '1.5s',
         'width': [width] + '%',
         'background-color': '#0fa2eb',
         'height': '15px',
@@ -91,7 +95,7 @@ export class AppComponent {
       }
 
       this.totalTargetWidth = {
-        'transition': '2s',
+        'transition': '1.5s',
         'width': [targetWidth - width] + '%',
         'background-color': '#ffe28a',
         'height': '15px',
@@ -99,44 +103,59 @@ export class AppComponent {
         'border-bottom-right-radius': '20px',
       }
     } else if (this.totalCurrentScore === this.totalTargetScore) {
+      this.arrowClassCurrent = 'arrow-down currentArrow';
       var width;
       width = this.totalCurrentScore / 800 * 100;
       this.currentScoreArrowPlacement = {
-        'transition': '2s',
+        'transition': '1.5s',
+        'width': 'calc(' + [width] + '%  + 5px)',
+        'height': '15px'
+      }
+      this.targetScoreArrowPlacement = {
+        'transition': '1.5s',
         'width': 'calc(' + [width] + '%  + 5px)',
         'height': '15px'
       }
       this.totalCurrentWidth = {
-        'transition': '2s',
+        'transition': '1.5s',
         'width': [width] + '%',
         'background-color': '#0fa2eb',
         'height': '15px'
       }
+      this.totalTargetWidth = {
+        'width': 0,
+        'background-color': '#f5f5f5',
+        'height': '15px'
+      }
+      this.scoreDiff = ''
     } else {
+      this.arrowClassCurrent = 'targetArrow'
+      this.arrowClassTarget = 'arrow-down currentArrow'
       this.scoreDiff = this.totalCurrentScore - this.totalTargetScore
       var width;
       width = this.totalTargetScore / 800 * 100;
       var targetWidth;
       targetWidth = this.totalCurrentScore / 800 * 100;
+      var setWidth = this.scoreDiff > 30 ? targetWidth - width + '%' : 'calc(' + [targetWidth] + '%  + 5px)'
       this.currentScoreArrowPlacement = {
-        'transition': '2s',
+        'transition': '1.5s',
         'width': 'calc(' + [width] + '%  + 5px)',
         'height': '15px'
       }
       this.targetScoreArrowPlacement = {
-        'transition': '2s',
-        'width': [targetWidth - width] + '%',
+        'transition': '1.5s',
+        'width': setWidth,
         'height': '15px'
       }
       this.totalCurrentWidth = {
-        'transition': '2s',
+        'transition': '1.5s',
         'width': [width] + '%',
-        'background-color': '#ffe28a',
+        'background-color': '#0fa2eb',
         'height': '15px'
       }
 
       this.totalTargetWidth = {
-        'transition': '2s',
+        'transition': '1.5s',
         'width': [targetWidth - width] + '%',
         'background-color': '#0fa2eb',
         'height': '15px'
